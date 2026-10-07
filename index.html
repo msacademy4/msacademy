@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ms Academy</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      color: #222;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 25px 18px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .header h1 {
+      margin: 0;
+      color: #4f46e5;
+      font-size: 30px;
+    }
+
+    .header p {
+      color: #666;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 18px;
+      margin-bottom: 15px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin-top: 0;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 12px;
+      background: #4f46e5;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .question {
+      font-size: 19px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .option {
+      background: #f1f3f9;
+      color: #222;
+    }
+
+    #testPage,
+    #resultPage {
+      display: none;
+    }
+
+    .score {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      color: #4f46e5;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- HOME -->
+    <div id="homePage">
+
+      <div class="header">
+        <h1>Ms Academy</h1>
+        <p>English Test Platform</p>
+      </div>
+
+      <div class="card">
+        <h2>📚 A2 Grammar Test</h2>
+        <p>10 ta savol</p>
+        <button onclick="startTest()">Start Test</button>
+      </div>
+
+    </div>
+
+
+    <!-- TEST -->
+    <div id="testPage">
+
+      <div class="header">
+        <h1>Ms Academy</h1>
+        <p id="questionNumber"></p>
+      </div>
+
+      <div class="card">
+
+        <div class="question" id="question"></div>
+
+        <div id="options"></div>
+
+      </div>
+
+    </div>
+
+
+    <!-- RESULT -->
+    <div id="resultPage">
+
+      <div class="header">
+        <h1>🎉 Test Finished!</h1>
+      </div>
+
+      <div class="card">
+
+        <p>Your result:</p>
+
+        <div class="score" id="score"></div>
+
+        <button onclick="location.reload()">
+          Try Again
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+<script>
+
+const questions = [
+
+  {
+    question: "She ___ to school every day.",
+    options: ["go", "goes", "going", "gone"],
+    answer: 1
+  },
+
+  {
+    question: "They ___ football now.",
+    options: ["play", "plays", "are playing", "played"],
+    answer: 2
+  },
+
+  {
+    question: "I ___ a student.",
+    options: ["am", "is", "are", "be"],
+    answer: 0
+  },
+
+  {
+    question: "He ___ TV yesterday.",
+    options: ["watch", "watches", "watched", "watching"],
+    answer: 2
+  },
+
+  {
+    question: "There ___ a book on the table.",
+    options: ["are", "is", "am", "be"],
+    answer: 1
+  },
+
+  {
+    question: "We ___ English every Monday.",
+    options: ["study", "studies", "studying", "studied"],
+    answer: 0
+  },
+
+  {
+    question: "My mother ___ cooking now.",
+    options: ["is", "are", "am", "be"],
+    answer: 0
+  },
+
+  {
+    question: "I have ___ apple.",
+    options: ["a", "an", "the", "some"],
+    answer: 1
+  },
+
+  {
+    question: "There ___ two chairs in the room.",
+    options: ["is", "are", "am", "be"],
+    answer: 1
+  },
+
+  {
+    question: "She can ___ English.",
+    options: ["speaks", "speaking", "speak", "spoke"],
+    answer: 2
+  }
+
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+
+function startTest() {
+
+  currentQuestion = 0;
+  score = 0;
+
+  document.getElementById("homePage").style.display = "none";
+  document.getElementById("testPage").style.display = "block";
+
+  showQuestion();
+}
+
+
+function showQuestion() {
+
+  const q = questions[currentQuestion];
+
+  document.getElementById("questionNumber").innerText =
+    "Question " + (currentQuestion + 1) +
+    " / " + questions.length;
+
+  document.getElementById("question").innerText =
+    q.question;
+
+  const optionsDiv =
+    document.getElementById("options");
+
+  optionsDiv.innerHTML = "";
+
+  q.options.forEach((option, index) => {
+
+    const button = document.createElement("button");
+
+    button.innerText = option;
+
+    button.className = "option";
+
+    button.onclick = function() {
+      checkAnswer(index);
+    };
+
+    optionsDiv.appendChild(button);
+
+  });
+
+}
+
+
+function checkAnswer(selected) {
+
+  if (selected === questions[currentQuestion].answer) {
+    score++;
+  }
+
+  currentQuestion++;
+
+  if (currentQuestion < questions.length) {
+
+    showQuestion();
+
+  } else {
+
+    showResult();
+
+  }
+
+}
+
+
+function showResult() {
+
+  document.getElementById("testPage").style.display = "none";
+
+  document.getElementById("resultPage").style.display = "block";
+
+  const percent =
+    Math.round((score / questions.length) * 100);
+
+  document.getElementById("score").innerText =
+    score + " / " + questions.length +
+    " (" + percent + "%)";
+
+}
+
+</script>
+
+</body>
+</html>
